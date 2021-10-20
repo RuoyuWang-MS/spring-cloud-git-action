@@ -1,0 +1,29 @@
+{
+  "name": "spring-cloud-git-action",
+  "version": "1.0.0",
+  "description": "spring-cloud-git-action",
+  "main": "lib/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RuoyuWang-MS/spring-cloud-git-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RuoyuWang-MS/spring-cloud-git-action/issues"
+  },
+  "homepage": "https://github.com/RuoyuWang-MS/spring-cloud-git-action#readme",
+  "dependencies": {
+    "@azure/arm-appplatform": "^1.4.0",
+    "@azure/identity": "^2.0.0",
+    "@azure/storage-file-share": "^12.8.0",
+    "@types/node": "^16.11.1",
+    "azure-actions-utility": "^1.0.3",
+    "tar": "^6.1.11",
+    "uuid": "^8.3.2"
+  }
+}
