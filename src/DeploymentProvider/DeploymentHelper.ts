@@ -6,15 +6,22 @@ import * as core from "@actions/core";
 export class DeploymentHelper {
     public static async getStagingDeploymentName(client: AppPlatformManagementClient, params: TaskParameters): Promise<string> {
         const deployments: Models.DeploymentsListResponse = await client.deployments.list(params.ResourceGroupName, params.AzureSpringCloud, params.AppName);
-        for (const deploymentAny in deployments) {
-            const deployment = deploymentAny as Models.DeploymentResource;
-            console.log("deploymentAny:" + deploymentAny);
+        deployments.forEach( deployment => {
             console.log("deployment:" + deployment);
-            console.log('Task parameters: ' + JSON.stringify(deployment));
+            console.log('deployment str: ' + JSON.stringify(deployment));
             if (deployment?.properties?.active == false) {
                 return deployment.name;
             }
-        }
+        })
+        // for (const deploymentAny in deployments) {
+        //     const deployment = deploymentAny as Models.DeploymentResource;
+        //     console.log("deploymentAny:" + deploymentAny);
+        //     console.log("deployment:" + deployment);
+        //     console.log('Task parameters: ' + JSON.stringify(deployment));
+        //     if (deployment?.properties?.active == false) {
+        //         return deployment.name;
+        //     }
+        // }
         return null;
     }
 
