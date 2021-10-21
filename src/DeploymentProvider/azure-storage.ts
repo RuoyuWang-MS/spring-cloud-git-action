@@ -1,8 +1,9 @@
 
+import * as core from '@actions/core';
 import { ShareFileClient, AnonymousCredential } from '@azure/storage-file-share';
 
 export async function uploadFileToSasUrl(uploadUrl: string, localPath: string) {
-    console.debug('uploading file to URL: ' + uploadUrl);
+    core.debug('uploading file to URL: ' + uploadUrl);
     const shareFileClient = new ShareFileClient(uploadUrl, new AnonymousCredential());
     try {
         console.info('StartingUploadOf' + localPath);

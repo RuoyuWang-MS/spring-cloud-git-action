@@ -1,3 +1,4 @@
+import * as core from '@actions/core';
 import { v4 as uuidv4 } from 'uuid';
 import { Package, PackageType } from 'azure-actions-utility/packageUtility';
 import { Actions, TaskParameters, TaskParametersUtility } from '../operations/taskparameters';
@@ -48,7 +49,7 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     private async performDeleteStagingDeploymentAction() {
-        console.debug('Delete staging deployment action');
+        core.debug('Delete staging deployment action');
         const deploymentName = await dh.getStagingDeploymentName(this.client, this.params);
         if (deploymentName) {
             await this.client.deployments.deleteMethod(this.params.ResourceGroupName, this.params.AzureSpringCloud, this.params.AppName, deploymentName);
@@ -59,10 +60,10 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     private async performSetProductionAction() {
-        console.debug('Set production action for app ' + this.params.AppName);
+        core.debug('Set production action for app ' + this.params.AppName);
         let deploymentName: string;
         if (this.params.UseStagingDeployment) {
-            console.debug('Targeting inactive deployment');
+            core.debug('Targeting inactive deployment');
             deploymentName = await dh.getStagingDeploymentName(this.client, this.params);
             this.params.DeploymentName = deploymentName;
             if (!deploymentName) { //If no inactive deployment exists, we cannot continue as instructed.
@@ -82,7 +83,7 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     private async performDeployAction() {
-        console.debug('Deployment action');
+        core.debug('Deployment action');
 
         let sourceType: string = this.determineSourceType(this.params.Package);
 
@@ -97,25 +98,25 @@ export class AzureSpringCloudDeploymentProvider {
             deploymentName = await dh.getStagingDeploymentName(this.client, this.params);
 
             if (!deploymentName) { //If no inactive deployment exists
-                console.debug('No inactive deployment exists');
+                core.debug('No inactive deployment exists');
                 if (this.params.CreateNewDeployment) {
-                    console.debug('New deployment will be created');
+                    core.debug('New deployment will be created');
                     deploymentName = this.defaultInactiveDeploymentName; //Create a new deployment with the default name.
                     this.params.DeploymentName = deploymentName;
                 } else
                     throw Error('NoStagingDeploymentFound');
             }
         } else { //Deploy to deployment with specified name
-            console.debug('Deploying with specified name.');
+            core.debug('Deploying with specified name.');
             deploymentName = this.params.DeploymentName;
             let deploymentNames : Array<string> = await dh.getAllDeploymentsName(this.client, this.params);
             if (!deploymentNames || !deploymentNames.includes(deploymentName)) {
-                console.debug(`Deployment ${deploymentName} does not exist`);
+                core.debug(`Deployment ${deploymentName} does not exist`);
                 if (this.params.CreateNewDeployment) {
                     if (deploymentNames.length > 1) {
                         throw Error('TwoDeploymentsAlreadyExistCannotCreate' + deploymentName);
                     } else {
-                        console.debug('Deployment will be created.');
+                        core.debug('Deployment will be created.');
                     }
                 } else {
                     throw Error('DeploymentDoesntExist' + deploymentName);
