@@ -1,13 +1,17 @@
 import { Actions, TaskParameters } from '../operations/taskparameters';
 import { AppPlatformManagementClient, AppPlatformManagementModels as Models } from '@azure/arm-appplatform'
 import {uploadFileToSasUrl} from "./azure-storage";
+import * as core from "@actions/core";
 
 export class DeploymentHelper {
     public static async getStagingDeploymentName(client: AppPlatformManagementClient, params: TaskParameters): Promise<string> {
         const deployments: Models.DeploymentsListResponse = await client.deployments.list(params.ResourceGroupName, params.AzureSpringCloud, params.AppName);
         for (const deploymentAny in deployments) {
             const deployment = deploymentAny as Models.DeploymentResource;
-            if (deployment.properties.active == false) {
+            console.log("deploymentAny:" + deploymentAny);
+            console.log("deployment:" + deployment);
+            console.log('Task parameters: ' + JSON.stringify(deployment));
+            if (deployment?.properties?.active == false) {
                 return deployment.name;
             }
         }
