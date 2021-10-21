@@ -18,12 +18,13 @@
   },
   "homepage": "https://github.com/RuoyuWang-MS/spring-cloud-git-action#readme",
   "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0",
     "@azure/arm-appplatform": "^1.4.0",
     "@azure/identity": "^2.0.0",
     "@azure/storage-file-share": "^12.8.0",
     "@types/node": "^16.11.1",
     "azure-actions-utility": "^1.0.3",
-    "debug": "^4.3.2",
     "tar": "^6.1.11",
     "uuid": "^8.3.2"
   }
