@@ -25,6 +25,7 @@
     "@azure/storage-file-share": "^12.8.0",
     "@types/node": "^16.11.1",
     "azure-actions-utility": "^1.0.3",
+    "debug": "^4.3.2",
     "tar": "^6.1.11",
     "uuid": "^8.3.2"
   }
