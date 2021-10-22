@@ -7,11 +7,14 @@ import { parse } from 'azure-actions-utility/parameterParserUtility';
 export class DeploymentHelper {
     public static async getStagingDeploymentName(client: AppPlatformManagementClient, params: TaskParameters): Promise<string> {
         const deployments: Models.DeploymentsListResponse = await client.deployments.list(params.ResourceGroupName, params.AzureSpringCloud, params.AppName);
+        let ret: string;
         deployments.forEach(deployment => {
-            console.log("deployment:" + deployment);
-            console.log('deployment str: ' + JSON.stringify(deployment));
-            if (deployment?.properties?.active == false) {
-                return deployment.name;
+            core.debug('deployment str: ' + JSON.stringify(deployment));
+            if (deployment.properties.active == false) {
+                core.debug("inactive deployment name:" + deployment.name);
+                ret = deployment.name;
+            } else {
+                core.debug("active deployment name:" + deployment.name);
             }
         });
         // for (const deploymentAny in deployments) {
@@ -23,7 +26,7 @@ export class DeploymentHelper {
         //         return deployment.name;
         //     }
         // }
-        return null;
+        return ret;
     }
 
     public static async getAllDeploymentsName(client: AppPlatformManagementClient, params: TaskParameters): Promise<Array<string>> {
