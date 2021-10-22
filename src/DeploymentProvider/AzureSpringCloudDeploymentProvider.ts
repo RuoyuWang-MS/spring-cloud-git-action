@@ -21,7 +21,8 @@ export class AzureSpringCloudDeploymentProvider {
     public async PreDeploymentStep() {
         const token = getDefaultAzureCredential();
         this.client = new AppPlatformManagementClient(token, this.params.AzureSubscription);
-        var serviceResponse = this.client.services.get(this.params.ResourceGroupName, this.params.AzureSpringCloud);
+        const serviceResponse = await this.client.services.get(this.params.ResourceGroupName, this.params.AzureSpringCloud);
+        core.debug("service response:\n" + serviceResponse._response.bodyAsText);
         //todo verify services
     }
 

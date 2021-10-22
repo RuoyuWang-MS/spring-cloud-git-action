@@ -36,6 +36,7 @@ export class TaskParametersUtility {
             Action: core.getInput(Inputs.action, {"required":true}),
             AppName: core.getInput(Inputs.appName, {"required":true}),
             UseStagingDeployment: core.getInput(Inputs.useStagingDeployment, {"required":true}) == "true",
+            //todo not == true but yes
             CreateNewDeployment: core.getInput(Inputs.createNewDeployment, {"required":false}) == "true",
             DeploymentName: core.getInput(Inputs.deploymentName, {"required" :!(core.getInput(Inputs.useStagingDeployment, {"required":true}) == "true") }),
             EnvironmentVariables: core.getInput(Inputs.environmentVariables, {"required":false}),

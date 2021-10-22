@@ -49,7 +49,6 @@ inputs:
   version:
     description: 'The runtime on which the app will run.'
     required: false
-    default: 'Java_11'
 #outputs:
 #  testEndpoint:
 #    description: "After the 'Deploy' action only. Contains private URL for accessing the updated deployment."
