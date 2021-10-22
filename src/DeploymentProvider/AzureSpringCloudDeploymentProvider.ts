@@ -21,6 +21,24 @@ export class AzureSpringCloudDeploymentProvider {
     public async PreDeploymentStep() {
         const token = getDefaultAzureCredential();
         this.client = new AppPlatformManagementClient(token, this.params.AzureSubscription);
+        const serviceList = await this.client.services.listBySubscription();
+        let filteredResources: Array<Models.ServiceResource> = [];
+        serviceList.forEach(service => {
+            if(service.name == this.params.AzureSpringCloud) {
+                filteredResources.push(service);
+            }
+        });
+        if (!filteredResources || filteredResources.length == 0) {
+            throw new Error('ResourceDoesntExist' + this.params.AzureSpringCloud);
+        }
+        else if (filteredResources.length == 1) {
+            core.debug("filteredResources:\n" + JSON.stringify(filteredResources));
+            core.debug("id:\n" + filteredResources[0].id);
+            //this.params.ResourceGroupName = filteredResources[0].id;
+        }
+        else { //Should never ever ever happen
+            throw new Error('DuplicateAzureSpringCloudName');
+        }
         const serviceResponse = await this.client.services.get(this.params.ResourceGroupName, this.params.AzureSpringCloud);
         core.debug("service response:\n" + serviceResponse._response.bodyAsText);
         //todo verify services
