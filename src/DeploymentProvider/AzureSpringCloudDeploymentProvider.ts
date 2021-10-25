@@ -24,12 +24,12 @@ export class AzureSpringCloudDeploymentProvider {
         const serviceList = await this.client.services.listBySubscription();
         let filteredResources: Array<Models.ServiceResource> = [];
         serviceList.forEach(service => {
-            if(service.name == this.params.AzureSpringCloud) {
+            if(service.name == this.params.ServiceName) {
                 filteredResources.push(service);
             }
         });
         if (!filteredResources || filteredResources.length == 0) {
-            throw new Error('ResourceDoesntExist' + this.params.AzureSpringCloud);
+            throw new Error('ResourceDoesntExist' + this.params.ServiceName);
         }
         else if (filteredResources.length == 1) {
             core.debug("filteredResources:\n" + JSON.stringify(filteredResources));
@@ -44,14 +44,12 @@ export class AzureSpringCloudDeploymentProvider {
             }
             this.params.ResourceGroupName = filteredResources[0].id.substring(beginIndex, endIndex);
             core.debug("ResourceGroupName:\n" + this.params.ResourceGroupName);
-            //this.params.ResourceGroupName = filteredResources[0].id;
         }
         else { //Should never ever ever happen
             throw new Error('DuplicateAzureSpringCloudName');
         }
-        const serviceResponse = await this.client.services.get(this.params.ResourceGroupName, this.params.AzureSpringCloud);
+        const serviceResponse = await this.client.services.get(this.params.ResourceGroupName, this.params.ServiceName);
         core.debug("service response:\n" + serviceResponse._response.bodyAsText);
-        //todo verify services
     }
 
     public async DeployAppStep() {
@@ -81,7 +79,7 @@ export class AzureSpringCloudDeploymentProvider {
         core.debug('Delete staging deployment action');
         const deploymentName = await dh.getStagingDeploymentName(this.client, this.params);
         if (deploymentName) {
-            await this.client.deployments.deleteMethod(this.params.ResourceGroupName, this.params.AzureSpringCloud, this.params.AppName, deploymentName);
+            await this.client.deployments.deleteMethod(this.params.ResourceGroupName, this.params.ServiceName, this.params.AppName, deploymentName);
         } else {
             throw Error('NoStagingDeploymentFound');
         }

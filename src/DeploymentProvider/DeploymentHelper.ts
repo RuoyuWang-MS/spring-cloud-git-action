@@ -6,7 +6,7 @@ import { parse } from 'azure-actions-utility/parameterParserUtility';
 
 export class DeploymentHelper {
     public static async getStagingDeploymentName(client: AppPlatformManagementClient, params: TaskParameters): Promise<string> {
-        const deployments: Models.DeploymentsListResponse = await client.deployments.list(params.ResourceGroupName, params.AzureSpringCloud, params.AppName);
+        const deployments: Models.DeploymentsListResponse = await client.deployments.list(params.ResourceGroupName, params.ServiceName, params.AppName);
         let ret: string;
         deployments.forEach(deployment => {
             core.debug('deployment str: ' + JSON.stringify(deployment));
@@ -31,7 +31,7 @@ export class DeploymentHelper {
 
     public static async getAllDeploymentsName(client: AppPlatformManagementClient, params: TaskParameters): Promise<Array<string>> {
         let names: Array<string> = [];
-        const deployments: Models.DeploymentsListResponse = await client.deployments.list(params.ResourceGroupName, params.AzureSpringCloud, params.AppName);
+        const deployments: Models.DeploymentsListResponse = await client.deployments.list(params.ResourceGroupName, params.ServiceName, params.AppName);
         deployments.forEach(deployment => {
             console.log("deployment:" + deployment);
             console.log('deployment str: ' + JSON.stringify(deployment));
@@ -50,12 +50,12 @@ export class DeploymentHelper {
                 activeDeploymentName: params.DeploymentName
             }
         };
-        await client.apps.update(params.ResourceGroupName, params.AzureSpringCloud, params.AppName, appResource);
+        await client.apps.update(params.ResourceGroupName, params.ServiceName, params.AppName, appResource);
         return;
     }
 
     public static async deploy(client: AppPlatformManagementClient, params: TaskParameters, sourceType: string, fileToUpload: string) {
-        let uploadResponse: Models.AppsGetResourceUploadUrlResponse = await client.apps.getResourceUploadUrl(params.ResourceGroupName, params.AzureSpringCloud, params.AppName);
+        let uploadResponse: Models.AppsGetResourceUploadUrlResponse = await client.apps.getResourceUploadUrl(params.ResourceGroupName, params.ServiceName, params.AppName);
         await uploadFileToSasUrl(uploadResponse.uploadUrl, fileToUpload);
         let transformedEnvironmentVariables = {};
         if (params.EnvironmentVariables) {
@@ -92,7 +92,7 @@ export class DeploymentHelper {
             }
         }
         core.debug("deploymentResource:" + JSON.stringify(deploymentResource));
-        const response = await client.deployments.createOrUpdate(params.ResourceGroupName, params.AzureSpringCloud, params.AppName, params.DeploymentName, deploymentResource);
+        const response = await client.deployments.createOrUpdate(params.ResourceGroupName, params.ServiceName, params.AppName, params.DeploymentName, deploymentResource);
         core.debug("deployment response:\n" + response._response.bodyAsText);
         return;
     }

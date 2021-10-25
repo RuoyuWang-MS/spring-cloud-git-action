@@ -9,9 +9,6 @@ inputs:
     description: 'Action to be performed on Azure Spring Cloud.'
     required: true
     default: 'Deploy'
-  resource-group-name:
-    description: 'Select the Azure Resource Group name.'
-    required: true
   azure-spring-cloud:
     description: 'Select the Azure Spring Cloud service to which to deploy.'
     required: true
